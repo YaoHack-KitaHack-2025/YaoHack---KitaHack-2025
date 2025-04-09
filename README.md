@@ -56,12 +56,20 @@ pip install -r requirements.txt
 > If you don’t have `requirements.txt`, create it manually:
 >
 > ```
-> flask
-> opencv-python
-> mediapipe
-> google-cloud-speech
-> google-cloud-vision
-> google-generativeai
+> Flask
+>opencv-python
+>mediapipe
+>numpy
+>pydub
+>librosa
+>soundfile
+>moviepy
+>google-cloud-speech
+>google-cloud-vision
+>google-generativeai
+>google-api-core
+>absl-py
+>python-dotenv
 > ```
 
 ### 3️⃣ Google Cloud Platform Setup
