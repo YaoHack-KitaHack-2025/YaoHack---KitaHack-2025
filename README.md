@@ -119,7 +119,6 @@ http://127.0.0.1:5000/
 | Home      | `/`                  | Welcome landing page                    |
 | AI Coach  | `/ai_coach`          | Live posture + speech feedback          |
 | Real-Time | `/real_time`         | Real-time video feedback page           |
-| Forum     | `/forum`             | Community forum page (demo)             |
 
 ---
 
