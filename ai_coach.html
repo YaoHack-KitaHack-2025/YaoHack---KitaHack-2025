@@ -1,0 +1,282 @@
+<!-- File: /templates/ai_coach.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AI Public Speaking Coach</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .video-container {
+            flex: 2 1 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .feedback-container {
+            flex: 1 1 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        #video-feed {
+            width: 100%;
+            max-height: 400px;
+            border: 2px solid #ddd;
+            background: black;
+        }
+        .feedback-box {
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .feedback-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        #record-button {
+            padding: 12px 20px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #record-button.recording {
+            background: #ea4335;
+        }
+        .transcript {
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+        }
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .metric {
+            text-align: center;
+            background: #f1f8e9;
+            padding: 10px;
+            border-radius: 8px;
+            flex: 1;
+            margin: 0 5px;
+        }
+        .metric h4 {
+            margin: 0 0 5px 0;
+            color: #2e7d32;
+        }
+        .metric p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .history-section {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Public Speaking Coach</h1>
+    <div class="container">
+        <div class="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="Video feed will appear here">
+            <button id="record-button">Start Recording</button>
+        </div>
+        <div class="feedback-container">
+            <div class="feedback-box">
+                <h3>Posture Feedback</h3>
+                <div id="posture-feedback">Loading posture feedback...</div>
+            </div>
+            <div class="feedback-box">
+                <h3>Speech Feedback</h3>
+                <div id="speech-feedback">Waiting for analysis...</div>
+                <div class="metrics">
+                    <div class="metric">
+                        <h4>WPM</h4>
+                        <p id="wpm">0</p>
+                    </div>
+                    <div class="metric">
+                        <h4>Duration</h4>
+                        <p id="duration">0s</p>
+                    </div>
+                    <div class="metric">
+                        <h4>Fillers</h4>
+                        <p id="fillers">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="transcript">
+                <h3>Transcript</h3>
+                <div id="transcript">No transcript yet.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="history-section">
+        <h2>Speech History</h2>
+        <table id="history-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Duration</th>
+                    <th>WPM</th>
+                    <th>Fillers</th>
+                    <th>Quality</th>
+                </tr>
+            </thead>
+            <tbody id="history-data">
+                <tr>
+                    <td colspan="5">No history yet</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('record-button');
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recordingTimeout;
+        let recordingHistory = [];
+
+        recordButton.addEventListener('click', toggleRecording);
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = e => {
+                        if (e.data.size > 0) audioChunks.push(e.data);
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                        await sendAudioToServer(audioBlob);
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    mediaRecorder.start();
+                    recordingTimeout = setTimeout(stopRecording, 30000); // Auto-stop after 30 seconds
+                    isRecording = true;
+                    recordButton.textContent = 'Stop Recording';
+                    recordButton.classList.add('recording');
+                } catch (err) {
+                    console.error('Microphone error:', err);
+                    alert('Please allow microphone access.');
+                }
+            } else {
+                stopRecording();
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                clearTimeout(recordingTimeout);
+                mediaRecorder.stop();
+                isRecording = false;
+                recordButton.textContent = 'Start Recording';
+                recordButton.classList.remove('recording');
+            }
+        }
+
+        async function sendAudioToServer(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+
+            try {
+                const response = await fetch('/process_audio', { method: 'POST', body: formData });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    document.getElementById('transcript').textContent = data.transcript || "No transcript yet";
+                    document.getElementById('speech-feedback').textContent = data.feedback || "No feedback yet";
+                    document.getElementById('wpm').textContent = data.wpm || "0";
+                    document.getElementById('duration').textContent = (data.duration || "0") + "s";
+                    document.getElementById('fillers').textContent = data.filler_count || "0";
+                    
+                    // Add to history
+                    const historyItem = {
+                        time: new Date().toLocaleTimeString(),
+                        duration: data.duration,
+                        wpm: data.wpm,
+                        fillers: data.filler_count,
+                        quality: data.feedback.includes("✅") ? "Good" : "Needs Work"
+                    };
+                    recordingHistory.unshift(historyItem);
+                    updateHistoryTable();
+                }
+                
+            } catch (e) {
+                console.error('Audio upload error:', e);
+            }
+        }
+
+        function updateHistoryTable() {
+            const historyData = document.getElementById('history-data');
+            historyData.innerHTML = '';
+            
+            if (recordingHistory.length === 0) {
+                historyData.innerHTML = '<tr><td colspan="5">No history yet</td></tr>';
+                return;
+            }
+            
+            recordingHistory.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.time}</td>
+                    <td>${item.duration}s</td>
+                    <td>${item.wpm}</td>
+                    <td>${item.fillers}</td>
+                    <td>${item.quality}</td>
+                `;
+                historyData.appendChild(row);
+            });
+        }
+
+        function updateFeedbackUI() {
+            fetch('/detection_result')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('transcript').textContent = data.transcript || "No transcript yet";
+                    document.getElementById('speech-feedback').textContent = data.speech_feedback || "No feedback yet";
+                    document.getElementById('posture-feedback').textContent = data.feedback || "No feedback yet";
+                    document.getElementById('wpm').textContent = data.wpm || "0";
+                    document.getElementById('duration').textContent = (data.duration_seconds || "0") + "s";
+                    document.getElementById('fillers').textContent = data.filler_word_count || "0";
+                })
+                .catch(e => console.error('Feedback update error:', e));
+        }
+
+        setInterval(updateFeedbackUI, 2000);
+    </script>
+</body>
+</html>
