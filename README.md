@@ -1,6 +1,3 @@
-### 📄 `README.md`
-
-```markdown
 # 🎙️ Spok.io - Your AI Public Speaking Coach
 
 Welcome!  
@@ -27,16 +24,15 @@ This is **Spok.io**, developed by **YaoHack Team**, a smart web platform to help
 
 ## 🧩 Tech Stack
 
-| Tech | Description |
-|------|-------------|
-| Python | Backend server using Flask |
-| OpenCV | Real-time video frame analysis |
-| MediaPipe | Pose estimation for posture feedback |
-| Google Cloud Platform (GCP) | Speech-to-text & Vision API |
-| Google Gemini API | AI responses and feedback |
-| HTML / CSS / JS | Frontend templates |
-| Flask | Web application framework |
-
+| Tech                   | Description                          |
+|------------------------|--------------------------------------|
+| Python                 | Backend server using Flask           |
+| OpenCV                 | Real-time video frame analysis       |
+| MediaPipe              | Pose estimation for posture feedback |
+| Google Cloud Platform  | Speech-to-text & Vision API          |
+| Google Gemini API      | AI responses and feedback            |
+| HTML / CSS / JS        | Frontend templates                   |
+| Flask                  | Web application framework            |
 
 ---
 
@@ -45,7 +41,7 @@ This is **Spok.io**, developed by **YaoHack Team**, a smart web platform to help
 ### 1️⃣ Clone this repository
 
 ```bash
-git clone https://github.com/your-username/spokio.git
+git clone https://github.com/YaoHack-KitaHack-2025/YaoHack---KitaHack-2025.git
 cd spokio
 ```
 
@@ -53,19 +49,20 @@ cd spokio
 
 Make sure Python 3.x is installed.
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
-> If you don’t have `requirements.txt`, create it:
-```bash
-flask
-opencv-python
-mediapipe
-google-cloud-speech
-google-cloud-vision
-google-generativeai
-```
+> If you don’t have `requirements.txt`, create it manually:
+>
+> ```
+> flask
+> opencv-python
+> mediapipe
+> google-cloud-speech
+> google-cloud-vision
+> google-generativeai
+> ```
 
 ### 3️⃣ Google Cloud Platform Setup
 
@@ -80,10 +77,10 @@ google-generativeai
    - Place it in your project folder.
 
 4. **Edit your `app.py`**:
-   - Update the credentials path:
-     ```python
-     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"YOUR_CREDENTIALS_FILE.json"
-     ```
+   Update the credentials path:
+   ```python
+   os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"YOUR_CREDENTIALS_FILE.json"
+   ```
 
 5. Add your **Gemini API Key** inside `app.py`:
    ```python
@@ -92,11 +89,12 @@ google-generativeai
 
 ### 4️⃣ Run the application
 
-```bash
+```
 python app.py
 ```
 
 Then, open your browser and visit:
+
 ```
 http://127.0.0.1:5000/
 ```
@@ -107,12 +105,12 @@ http://127.0.0.1:5000/
 
 ## 🌐 Pages Available
 
-| Page | URL | Description |
-|------|-----|-------------|
-| Home | `/` | Welcome landing page |
-| AI Coach | `/ai_coach` | Live posture + speech feedback |
-| Real-Time | `/real_time` | Real-time video feedback page |
-| Forum | `/forum` | Community forum page (demo) |
+| Page      | URL                  | Description                             |
+|-----------|----------------------|-----------------------------------------|
+| Home      | `/`                  | Welcome landing page                    |
+| AI Coach  | `/ai_coach`          | Live posture + speech feedback          |
+| Real-Time | `/real_time`         | Real-time video feedback page           |
+| Forum     | `/forum`             | Community forum page (demo)             |
 
 ---
 
@@ -141,7 +139,7 @@ If you have ideas to improve Spok.io, feel free to fork the repo and submit a pu
 
 ## 📢 Credits
 
-Made with 💙 by **YaoHack Team**  
+Made with 💙 by **YaoHack Team**
 2025 - UTM x Spok.io Project
 
 ---
@@ -149,3 +147,4 @@ Made with 💙 by **YaoHack Team**
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+```
