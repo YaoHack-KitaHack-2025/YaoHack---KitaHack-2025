@@ -12,3 +12,4 @@ google-generativeai
 google-api-core
 absl-py
 python-dotenv
+ffmpeg
