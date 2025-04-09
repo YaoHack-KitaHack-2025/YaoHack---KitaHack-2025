@@ -70,6 +70,7 @@ pip install -r requirements.txt
 >google-api-core
 >absl-py
 >python-dotenv
+> ffmpeg
 > ```
 
 ### 3️⃣ Google Cloud Platform Setup
