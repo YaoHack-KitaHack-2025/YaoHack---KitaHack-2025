@@ -66,7 +66,7 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\User\Downloads\try it\
 speech_client = speech.SpeechClient()
 
 # Gemini AI setup
-genai.configure(api_key='AIzaSyCDjJCuN6GtZ1m0hMJURFYgXlxo3wsxLfQ')  # Replace with your actual API key
+genai.configure(api_key='API_KEY_GEMINI')  # Replace with your actual API key
 gemini_model = genai.GenerativeModel('gemini-2.0-flash')
 chatbot_session = gemini_model.start_chat(history=[])
 chatbot_lock = Lock()
