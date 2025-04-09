@@ -37,26 +37,6 @@ This is **Spok.io**, developed by **YaoHack Team**, a smart web platform to help
 | HTML / CSS / JS | Frontend templates |
 | Flask | Web application framework |
 
----
-
-## 📁 Project Structure
-
-```
-/project-root/
-│
-├── app.py                      # Main Flask application
-├── posture_analyzer.py         # Posture detection and analysis
-│
-├── /templates/                 # HTML templates
-│   ├── index.html
-│   ├── ai_coach.html
-│   └── chatbot.html
-│
-├── /static/                    # Static CSS files
-│   └── style.css
-│
-└── /README.md                  # Project documentation
-```
 
 ---
 
